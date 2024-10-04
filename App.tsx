@@ -43,6 +43,8 @@ const AuthScreen = ({
   setEmail,
   password,
   setPassword,
+  confirmPassword,
+  setConfirmPassword,
   isLogin,
   setIsLogin,
   handleAuthentication,
@@ -76,6 +78,18 @@ const AuthScreen = ({
           secureTextEntry
         />
       </View>
+      {!isLogin && (
+        <View style={styles.inputContainer}>
+          <Icon name="lock" size={30} color="#3498db" style={styles.iconPass} />
+          <TextInput
+            style={styles.input}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            placeholder="Confirm Password"
+            secureTextEntry
+          />
+        </View>
+      )}
       <TouchableOpacity onPress={handleAuthentication}>
         <View style={styles.buttonContainer}>
           <Text style={{ color: "#fff", fontSize: 20 }}>
@@ -98,6 +112,7 @@ const AuthScreen = ({
 const App = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [user, setUser] = useState<user | null>(null);
   const [isLogin, setIsLogin] = useState(true);
   const [errorMessage, setErrorMessage] = useState(""); // State to store error messages
@@ -126,6 +141,10 @@ const App = () => {
           console.log("User signed in successfully!");
         } else {
           // Sign up
+          if (password !== confirmPassword) {
+            setErrorMessage("Passwords do not match.");
+            return;
+          }
           await createUserWithEmailAndPassword(auth, email, password);
           console.log("User created successfully!");
         }
@@ -187,6 +206,8 @@ const App = () => {
               setEmail={setEmail}
               password={password}
               setPassword={setPassword}
+              confirmPassword={confirmPassword}
+              setConfirmPassword={setConfirmPassword}
               isLogin={isLogin}
               setIsLogin={setIsLogin}
               handleAuthentication={handleAuthentication}
